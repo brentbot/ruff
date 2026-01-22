@@ -116,7 +116,9 @@ pub(crate) fn import_private_name(checker: &Checker, scope: &Scope) {
             .qualified_name
             .segments()
             .iter()
-            .find_position(|name| name.starts_with('_'))
+            .find_position(|name| {
+                name.starts_with('_') && !(name.starts_with("__") && name.ends_with("__"))
+            })
         else {
             continue;
         };
@@ -137,7 +139,29 @@ pub(crate) fn import_private_name(checker: &Checker, scope: &Scope) {
         } else {
             None
         };
-        checker.report_diagnostic(ImportPrivateName { name, module }, binding.range());
+        // Determine the diagnostic range based on where the private name appears
+        let range = if let Some(ruff_python_ast::Stmt::ImportFrom(import_from)) =
+            binding.statement(checker.semantic())
+        {
+            if index < import_info.module_name.len() {
+                // Private name is in the module path (e.g., `from _private import foo`)
+                import_from
+                    .module
+                    .as_ref()
+                    .map_or_else(|| binding.range(), Ranged::range)
+            } else {
+                // Private name is in the imported member (e.g., `from foo import _private`)
+                import_from
+                    .names
+                    .iter()
+                    .find(|alias| alias.name.as_str() == import_info.member_name)
+                    .map_or_else(|| binding.range(), Ranged::range)
+            }
+        } else {
+            binding.range()
+        };
+
+        checker.report_diagnostic(ImportPrivateName { name, module }, range);
     }
 }
 
