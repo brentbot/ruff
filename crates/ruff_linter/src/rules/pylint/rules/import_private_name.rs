@@ -155,7 +155,7 @@ pub(crate) fn import_private_name(checker: &Checker, scope: &Scope) {
                     .names
                     .iter()
                     .find(|alias| alias.name.as_str() == import_info.member_name)
-                    .map_or_else(|| binding.range(), Ranged::range)
+                    .map_or_else(|| binding.range(), |alias| alias.name.range())
             }
         } else {
             binding.range()

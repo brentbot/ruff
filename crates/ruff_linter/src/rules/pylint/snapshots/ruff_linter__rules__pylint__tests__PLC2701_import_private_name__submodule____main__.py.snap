@@ -1,5 +1,6 @@
 ---
 source: crates/ruff_linter/src/rules/pylint/mod.rs
+assertion_line: 252
 ---
 PLC2701 Private name import `_a`
  --> __main__.py:2:6
@@ -50,7 +51,7 @@ PLC2701 Private name import `_l` from external module `k`
 4 | from _f.g import h
 5 | from i import _j
 6 | from k import _l as m
-  |               ^^^^^^^
+  |               ^^
 7 | import _aaa
 8 | import bbb.ccc._ddd as eee  # Panicked in https://github.com/astral-sh/ruff/pull/5920
   |
