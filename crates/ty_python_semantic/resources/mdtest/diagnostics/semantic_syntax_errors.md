@@ -418,3 +418,23 @@ def f(a):
     class Inner:
         global a  # ok
 ```
+
+## Duplicate `await` error messages
+
+This test reproduces issue <https://github.com/astral-sh/ty/issues/2598>. When `await` is used
+outside of any function at module level, two almost identical error messages are emitted which is
+confusing:
+
+1. "`await` statement outside of a function"
+1. "`await` outside of an asynchronous function"
+
+These should be deduplicated or consolidated into a single, clear error message.
+
+```py
+async def foo():
+    return 123
+
+# error: [invalid-syntax] "`await` statement outside of a function"
+# error: [invalid-syntax] "`await` outside of an asynchronous function"
+await foo()
+```
