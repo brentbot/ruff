@@ -32,6 +32,7 @@ const PRODUCTION_HEADERS = {
 };
 
 const ALLOWED_DOMAINS = new Set([
+  "https://play.ruff.rs",
   "https://playknot.ruff.rs",
   "https://types.ruff.rs",
   "https://play.ty.dev",
@@ -45,7 +46,13 @@ export default {
   ): Promise<Response> {
     const { DEV, PLAYGROUND } = env;
 
-    const headers = DEV ? DEVELOPMENT_HEADERS : PRODUCTION_HEADERS;
+    // Spread into a new object to avoid mutating the shared module-level
+    // constants. Without this, setting `Access-Control-Allow-Origin` for one
+    // origin (e.g. play.ty.dev) would permanently change the header value for
+    // all subsequent requests handled by the same worker instance.
+    const headers = DEV
+      ? { ...DEVELOPMENT_HEADERS }
+      : { ...PRODUCTION_HEADERS };
 
     if (!DEV) {
       const origin = request.headers.get("origin");
