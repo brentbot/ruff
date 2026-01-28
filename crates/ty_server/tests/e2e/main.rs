@@ -79,6 +79,7 @@ use ruff_db::system::{OsSystem, SystemPath, SystemPathBuf, TestSystem};
 use rustc_hash::FxHashMap;
 use tempfile::TempDir;
 use ty_server::{ClientOptions, LogLevel, Server, init_logging};
+use ty_static::EnvVars;
 
 /// Number of times to retry receiving a message before giving up
 const RETRY_COUNT: usize = 5;
@@ -1118,7 +1119,16 @@ impl TestServerBuilder {
             test_context: TestContext::new()?,
             initialization_options: None,
             client_capabilities,
-            env_vars: vec![("VIRTUAL_ENV".to_string(), None)],
+            // Remove all Python environment variables that could leak packages from the
+            // contributor's environment into the tests. Setting the value to `None` removes
+            // the variable from the test environment.
+            env_vars: vec![
+                (EnvVars::VIRTUAL_ENV.to_string(), None),
+                (EnvVars::PYTHONPATH.to_string(), None),
+                (EnvVars::CONDA_PREFIX.to_string(), None),
+                (EnvVars::CONDA_DEFAULT_ENV.to_string(), None),
+                (EnvVars::CONDA_ROOT.to_string(), None),
+            ],
         })
     }
 

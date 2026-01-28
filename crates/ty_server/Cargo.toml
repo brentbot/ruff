@@ -49,6 +49,7 @@ insta = { workspace = true, features = ["filters", "json"] }
 regex = { workspace = true }
 smallvec = { workspace = true }
 tempfile = { workspace = true }
+ty_static = { workspace = true }
 
 [lints]
 workspace = true
