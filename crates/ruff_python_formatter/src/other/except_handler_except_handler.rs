@@ -80,7 +80,8 @@ impl FormatNodeRule<ExceptHandlerExceptHandler> for FormatExceptHandlerExceptHan
                         // ```
                         Some(Expr::Tuple(tuple))
                             if f.options().target_version() >= PythonVersion::PY314
-                                && name.is_none() =>
+                                && name.is_none()
+                                && !tuple.elts.iter().any(Expr::is_starred_expr) =>
                         {
                             write!(
                                 f,

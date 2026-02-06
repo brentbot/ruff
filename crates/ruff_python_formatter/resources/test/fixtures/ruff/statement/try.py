@@ -203,3 +203,15 @@ try:
     pass
 except* (BaseException, Exception, ValueError) as e:
     pass
+
+# Parentheses must be preserved when starred exceptions are present
+# to avoid `except *foo` becoming `except* foo`
+try:
+    pass
+except (*JSON_DECODE_EXCEPTIONS, ValueError):
+    pass
+
+try:
+    pass
+except (ValueError, *OTHER_EXCEPTIONS):
+    pass

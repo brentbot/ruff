@@ -1,5 +1,6 @@
 ---
 source: crates/ruff_python_formatter/tests/fixtures.rs
+assertion_line: 303
 ---
 ## Input
 ```python
@@ -207,6 +208,18 @@ except (BaseException, Exception, ValueError) as e:
 try:
     pass
 except* (BaseException, Exception, ValueError) as e:
+    pass
+
+# Parentheses must be preserved when starred exceptions are present
+# to avoid `except *foo` becoming `except* foo`
+try:
+    pass
+except (*JSON_DECODE_EXCEPTIONS, ValueError):
+    pass
+
+try:
+    pass
+except (ValueError, *OTHER_EXCEPTIONS):
     pass
 ```
 
@@ -453,6 +466,18 @@ except (BaseException, Exception, ValueError) as e:
 try:
     pass
 except* (BaseException, Exception, ValueError) as e:
+    pass
+
+# Parentheses must be preserved when starred exceptions are present
+# to avoid `except *foo` becoming `except* foo`
+try:
+    pass
+except (*JSON_DECODE_EXCEPTIONS, ValueError):
+    pass
+
+try:
+    pass
+except (ValueError, *OTHER_EXCEPTIONS):
     pass
 ```
 
@@ -726,6 +751,18 @@ except (BaseException, Exception, ValueError) as e:
 try:
     pass
 except* (BaseException, Exception, ValueError) as e:
+    pass
+
+# Parentheses must be preserved when starred exceptions are present
+# to avoid `except *foo` becoming `except* foo`
+try:
+    pass
+except (*JSON_DECODE_EXCEPTIONS, ValueError):
+    pass
+
+try:
+    pass
+except (ValueError, *OTHER_EXCEPTIONS):
     pass
 ```
 
