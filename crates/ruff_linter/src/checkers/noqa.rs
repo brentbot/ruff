@@ -41,7 +41,7 @@ pub(crate) fn check_noqa(
 
     // Extract all `noqa` directives.
     let mut noqa_directives =
-        NoqaDirectives::from_commented_ranges(comment_ranges, &settings.external, path, locator);
+        NoqaDirectives::from_commented_ranges(comment_ranges, path, locator);
 
     if file_noqa_directives.is_empty() && noqa_directives.is_empty() && suppressions.is_empty() {
         return Vec::new();
