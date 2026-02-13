@@ -2400,6 +2400,25 @@ fn cookiecutter_globbing() -> Result<()> {
 }
 
 #[test]
+fn stable_output_format_warning() -> Result<()> {
+    let test = CliTest::new()?;
+    assert_cmd_snapshot!(
+        test.format_command()
+            .args(["--output-format=full", "-"])
+            .pass_stdin(""),
+        @"
+    success: true
+    exit_code: 0
+    ----- stdout -----
+
+    ----- stderr -----
+    warning: The --output-format flag for the formatter is unstable and requires preview mode to use.
+    ",
+    );
+    Ok(())
+}
+
+#[test]
 fn markdown_formatting_preview_disabled() -> Result<()> {
     let test = CliTest::new()?;
     let unformatted = test.fixture_path("unformatted.md");
